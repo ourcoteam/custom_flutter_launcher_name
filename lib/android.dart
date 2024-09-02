@@ -4,9 +4,15 @@ import 'package:custom_flutter_launcher_name/constants.dart' as constants;
 
 /// Updates the line which specifies the launcher label within the AndroidManifest.xml
 /// with the new name (only if it has changed)
-Future<void> overwriteAndroidManifest(String name) async {
+Future<void> overwriteAndroidManifest(String rawName) async {
   final File androidManifestFile = File(constants.androidManifestFile);
   final List<String> lines = await androidManifestFile.readAsLines();
+
+  String name = '$rawName';
+  if(name.contains('&')){
+    name = name.replaceAll('&', '&amp;');
+  }
+
   for (int x = 0; x < lines.length; x++) {
     String line = lines[x];
     if (line.contains('android:label')) {
